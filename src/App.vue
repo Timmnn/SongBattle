@@ -126,7 +126,7 @@ function getAccessToken() {
 }
 
 function authenticate() {
-   window.location.href = `https://accounts.spotify.com/authorize?client_id=f30887f7bc6749b99807c2540d408a3c&response_type=token&redirect_uri=${window.location.href}`;
+   window.location.href = `https://accounts.spotify.com/authorize?client_id=f30887f7bc6749b99807c2540d408a3c&response_type=token&redirect_uri=${window.location.origin}`;
 }
 
 function getPlaylist() {
