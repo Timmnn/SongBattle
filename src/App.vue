@@ -96,6 +96,10 @@ class Game {
    }
 }
 
+function getSpotifyAuthUrl() {
+   return `https://accounts.spotify.com/authorize?client_id=f30887f7bc6749b99807c2540d408a3c&response_type=token&redirect_uri=${window.location.origin}`;
+}
+
 function newGame() {
    game.value = new Game(songs.value);
 }
@@ -170,9 +174,7 @@ function generatePowersOf2(inputArray: any) {
 </script>
 
 <template>
-   {{
-      `https://accounts.spotify.com/authorize?client_id=f30887f7bc6749b99807c2540d408a3c&response_type=token&redirect_uri=${window.location.origin}`
-   }}
+   {{ getSpotifyAuthUrl() }}
    <div class="load-playlist">
       <h1>Load Playlist</h1>
       URL: <input type="text" v-model="playlist_url" />
