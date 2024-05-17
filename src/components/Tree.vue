@@ -6,7 +6,7 @@ const props = defineProps<{
 
 <template>
    <div class="tree">
-      <div class="node">{{ tree.round_name || tree.name }}</div>
+      <div class="node">{{ props.tree.round_name || tree.name }}</div>
       <div class="children">
          <div class="left">
             <Tree v-if="tree.left" :tree="tree.left" />

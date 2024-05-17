@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import Tree from "./components/Tree.vue";
 
 const playlist_url = ref("https://open.spotify.com/playlist/7jm9uTjAE8kq7Pvk6s5qko");
-const songs = ref([]);
+const songs = ref([]) as any;
 const numberOfSongs = ref(0);
 
-const game = ref(null);
+const game = ref(null) as any;
 
 class Game {
-   constructor(songs) {
+   songs: any;
+   game_tree: any;
+   current_round: any;
+
+   constructor(songs: any) {
       this.songs = songs;
       this.game_tree = this.buildGameTree();
 
@@ -24,12 +28,12 @@ class Game {
       // pick n random songs
 
       let picked_songs = JSON.parse(JSON.stringify(songs.value));
-      while (picked_songs.length > parseInt(numberOfSongs.value)) {
+      while (picked_songs.length > numberOfSongs.value) {
          const rand_index = Math.floor(Math.random() * picked_songs.length);
-         picked_songs = picked_songs.filter((_, index) => index !== rand_index);
+         picked_songs = picked_songs.filter((_: any, index: number) => index !== rand_index);
       }
 
-      const depth = Math.log2(parseInt(numberOfSongs.value));
+      const depth = Math.log2(numberOfSongs.value);
 
       while (picked_songs.length > 1) {
          const left = picked_songs.shift();
@@ -54,7 +58,7 @@ class Game {
       return picked_songs[0];
    }
 
-   setWinner(winner_id) {
+   setWinner(winner_id: any) {
       const winner =
          this.current_round.left.id === winner_id
             ? this.current_round.left
@@ -97,7 +101,7 @@ function newGame() {
 }
 
 function getAccessToken() {
-   let token = localStorage.getItem("access_token");
+   let token = localStorage.getItem("access_token") as any;
    if (token) {
       return token;
    }
@@ -107,11 +111,12 @@ function getAccessToken() {
       .split("&")
       .reduce(function (initial, item) {
          if (item) {
-            var parts = item.split("=");
+            var parts = item.split("=") as any;
+            // @ts-ignore
             initial[parts[0]] = decodeURIComponent(parts[1]);
          }
          return initial;
-      }, {});
+      }, {}) as any;
    token = hash.access_token;
    if (token) {
       localStorage.setItem("access_token", token);
@@ -126,7 +131,8 @@ function authenticate() {
 }
 
 function getPlaylist() {
-   const id = playlist_url.value.split("/").pop().split("?")[0];
+   // @ts-ignore
+   const id = playlist_url.value.split("/").pop()!.split("?")[0];
 
    fetch("https://api.spotify.com/v1/playlists/" + id, {
       headers: {
@@ -140,7 +146,7 @@ function getPlaylist() {
             localStorage.removeItem("access_token");
             window.location.reload();
          }
-         songs.value = data.tracks.items.map(item => {
+         songs.value = data.tracks.items.map((item: any) => {
             return {
                name: item.track.name,
                artist: item.track.artists[0].name,
@@ -152,7 +158,7 @@ function getPlaylist() {
       });
 }
 
-function generatePowersOf2(inputArray) {
+function generatePowersOf2(inputArray: any) {
    const n = inputArray.length;
    const powersOf2 = [];
    let power = 1;
@@ -171,7 +177,7 @@ function generatePowersOf2(inputArray) {
       <button @click="getPlaylist">Load</button>
    </div>
    <div class="songs">
-      <div v-for="song in songs" :key="song.name" class="song">
+      <div v-for="song in songs" class="song">
          <img :src="song.image" />
          <div>
             <h2>{{ song.name }}</h2>
@@ -210,7 +216,6 @@ function generatePowersOf2(inputArray) {
                   width="100%"
                   height="152"
                   frameBorder="0"
-                  allowfullscreen=""
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                   loading="lazy"></iframe>
             </div>
@@ -221,7 +226,6 @@ function generatePowersOf2(inputArray) {
                   width="100%"
                   height="152"
                   frameBorder="0"
-                  allowfullscreen=""
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                   loading="lazy"></iframe>
             </div>
