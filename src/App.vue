@@ -237,7 +237,7 @@ function importSongs() {
 
    <div class="game-tree">
       <h1>Game Tree</h1>
-      <Tree v-if="game && false" :tree="game.game_tree" />
+      <Tree v-if="game" :tree="game.game_tree" class="tree" />
    </div>
 
    <div class="current-round" v-if="game?.current_round">
@@ -290,6 +290,10 @@ function importSongs() {
       width: 100%;
       aspect-ratio: 1;
    }
+}
+
+.tree {
+   max-width: 100vw;
 }
 
 .current-round {
