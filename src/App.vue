@@ -237,7 +237,7 @@ function importSongs() {
 
    <div class="game-tree">
       <h1>Game Tree</h1>
-      <Tree v-if="game" :tree="game.game_tree" />
+      <Tree v-if="game && false" :tree="game.game_tree" />
    </div>
 
    <div class="current-round" v-if="game?.current_round">
