@@ -79,18 +79,21 @@ class Game {
    }
 
    findCurrentRound() {
-      // find deepest round
-
       let current_round = this.game_tree;
-      while (current_round.left.round_name) {
-         current_round = current_round.left;
-      }
 
-      while (current_round.right.round_name) {
-         current_round = current_round.right;
-      }
+      console.log("AAA", current_round);
+      while (true) {
+         if (current_round.left.round_name) {
+            current_round = current_round.left;
+            continue;
+         }
 
-      console.log("Current Round:", current_round);
+         if (current_round.right.round_name) {
+            current_round = current_round.right;
+            continue;
+         }
+         break;
+      }
 
       return current_round;
    }
