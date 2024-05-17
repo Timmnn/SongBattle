@@ -171,6 +171,31 @@ function generatePowersOf2(inputArray: any) {
    }
    return powersOf2;
 }
+
+function exportSongs() {
+   const json = JSON.stringify(songs.value);
+   const blob = new Blob([json], { type: "application/json" });
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement("a");
+   a.href = url;
+   a.download = "songs.json";
+   a.click();
+}
+
+function importSongs() {
+   const input = document.createElement("input");
+   input.type = "file";
+   input.accept = ".json";
+   input.onchange = (e: any) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+         songs.value = JSON.parse(e.target.result);
+      };
+      reader.readAsText(file);
+   };
+   input.click();
+}
 </script>
 
 <template>
@@ -181,6 +206,9 @@ function generatePowersOf2(inputArray: any) {
       <button @click="getPlaylist">Load</button>
    </div>
    <div class="songs">
+      <button @click="exportSongs">Export</button>
+      <button @click="importSongs">Import</button>
+
       <div v-for="song in songs" class="song">
          <img :src="song.image" />
          <div>
