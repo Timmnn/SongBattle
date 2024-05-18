@@ -386,6 +386,11 @@ p {
 
 .options {
    display: flex;
+   width: 100%;
    gap: 1rem;
+
+   button {
+      flex-grow: 1;
+   }
 }
 </style>
