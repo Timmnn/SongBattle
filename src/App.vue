@@ -130,7 +130,13 @@ function newGame() {
 }
 
 onMounted(() => {
-   getAccessToken();
+   if (
+      confirm(
+         "Möchtest du dich anmelden, um eigene Playlists zu laden? ( Premium Spotify Account benötigt)"
+      )
+   ) {
+      getAccessToken();
+   }
 });
 
 function getAccessToken() {
