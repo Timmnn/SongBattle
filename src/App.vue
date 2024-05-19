@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Tree from "./components/Tree.vue";
 
-const playlist_url = ref("https://open.spotify.com/playlist/0IuCDOVnrPhX8KRf6kLyxn");
+const playlist_url = ref("https://open.spotify.com/playlist/37i9dQZF1DZ06evO1qXmFj");
 const songs = ref([]) as any;
 const numberOfSongs = ref(0);
 
