@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import Tree from "./components/Tree.vue";
 
 const playlist_url = ref("https://open.spotify.com/playlist/0IuCDOVnrPhX8KRf6kLyxn");
