@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import Tree from "./components/Tree.vue";
 
-const playlist_url = ref("https://open.spotify.com/playlist/37i9dQZF1DWY5ai7gxfuaS");
+const playlist_url = ref("https://open.spotify.com/playlist/0IuCDOVnrPhX8KRf6kLyxn");
 const songs = ref([]) as any;
 const numberOfSongs = ref(0);
 
@@ -96,6 +96,33 @@ class Game {
       this.current_round = this.findCurrentRound();
    }
 
+   calculateCurrentRoundDepth() {
+      let count = 0;
+      let curr = this.current_round;
+      while (curr.parent) {
+         count++;
+         curr = curr.parent;
+      }
+
+      return count;
+   }
+
+   getRoundName() {
+      const round_names = {
+         "0": "Final",
+         "1": "Semi-Finals",
+         "2": "Quarter-Finals",
+      };
+
+      const depth = this.calculateCurrentRoundDepth();
+
+      if (depth > 2) {
+         return `Round of ${2 ** (depth + 1)}`;
+      }
+
+      return round_names[depth.toString() as "0" | "1" | "2"];
+   }
+
    findCurrentRound() {
       let current_round = this.game_tree;
 
@@ -129,16 +156,6 @@ function newGame() {
    game.value = new Game(songs.value);
 }
 
-onMounted(() => {
-   if (
-      confirm(
-         "Möchtest du dich anmelden, um eigene Playlists zu laden? ( Premium Spotify Account benötigt)"
-      )
-   ) {
-      getAccessToken();
-   }
-});
-
 function getAccessToken() {
    let token = localStorage.getItem("access_token") as any;
    const expires_at = localStorage.getItem("expires_at");
@@ -168,7 +185,22 @@ function getAccessToken() {
       localStorage.setItem("expires_at", (Date.now() + 3600 * 1000).toString());
       return token;
    }
+
+   if (
+      !confirm(
+         "Du musst dich bei Spotify anmelden, um eine Playlist zu laden. (Premium Account benötigt)"
+      )
+   ) {
+      return;
+   }
+
    return authenticate();
+}
+
+function onPlayerRightClick(e: MouseEvent) {
+   console.log("right click");
+   const target = e.target as HTMLIFrameElement;
+   target.setAttribute("src", target.getAttribute("src") as string);
 }
 
 function authenticate() {
@@ -255,7 +287,7 @@ function importSongs() {
             <img :src="song.image" />
             <div>
                <h5>{{ song.name }}</h5>
-               <p>{{ song.artist }} - {{ song.album }}</p>
+               <p>{{ song.artist }}</p>
             </div>
          </a>
       </div>
@@ -283,9 +315,14 @@ function importSongs() {
    <div class="current-round" v-if="game?.current_round">
       <h1>Current Round</h1>
 
+      <h2>
+         {{ game.getRoundName() }}
+      </h2>
+
       <div class="battle">
          <div class="left">
             <iframe
+               @contextmenu="onPlayerRightClick"
                style="border-radius: 12px"
                :src="`https://open.spotify.com/embed/track/${game.current_round.left.id}?utm_source=generator&theme=0`"
                width="100%"
@@ -296,6 +333,7 @@ function importSongs() {
          </div>
          <div class="right">
             <iframe
+               @contextmenu="onPlayerRightClick"
                style="border-radius: 12px"
                :src="`https://open.spotify.com/embed/track/${game.current_round.right.id}?utm_source=generator&theme=0`"
                width="100%"
