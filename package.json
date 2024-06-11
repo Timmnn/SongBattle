@@ -10,6 +10,7 @@
       "expose": "ngrok http --domain=eternal-penguin-eminently.ngrok-free.app 5173"
    },
    "dependencies": {
+      "@tsparticles/confetti": "^3.4.0",
       "vue": "^3.4.21"
    },
    "devDependencies": {

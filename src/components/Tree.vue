@@ -5,8 +5,8 @@ const props = defineProps<{
 </script>
 
 <template>
-   <div class="tree">
-      <div class="children">
+   <div class="tree" :class="{ leaf: !tree.left && !tree.right }">
+      <div class="children" v-if="tree.left || tree.right">
          <div class="left">
             <Tree v-if="tree.left" :tree="tree.left" />
          </div>
@@ -30,7 +30,8 @@ const props = defineProps<{
    width: 100%;
    gap: 1rem;
    height: fit-content;
-   border: 1px solid black;
+   border: 2px solid rgb(14, 24, 29);
+   border-radius: 5px;
 }
 
 .children {
@@ -41,34 +42,26 @@ const props = defineProps<{
    gap: 1rem;
 }
 
-.lines {
+.left,
+.right {
    display: flex;
-   justify-content: center;
+   flex-direction: row;
    align-items: center;
-
-   .up {
-      width: 1px;
-      height: 1rem;
-      background-color: black;
-   }
-
-   .horizontal {
-      width: 1rem;
-      height: 1px;
-      background-color: black;
-   }
 }
 
 .node {
    flex-grow: 1;
    display: flex;
    flex-direction: column;
-   align-items: center;
+   align-items: stretch;
    justify-content: center;
    .name {
-      border: 1px solid black;
       background-color: rgb(14, 24, 29);
-      padding: 1rem;
+      height: 60px;
+      width: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
    }
 }
 </style>

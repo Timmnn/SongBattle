@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import useConfetti from "./composables/useConfetti";
 import Tree from "./components/Tree.vue";
+import WinnerBanner from "./components/WinnerBanner.vue";
 
 const playlist_url = ref("https://open.spotify.com/playlist/37i9dQZF1DZ06evO1qXmFj");
 const songs = ref([]) as any;
 const numberOfSongs = ref(0);
+const lastGamesWinner = ref(null) as any;
 
 const game = ref(null) as any;
 
@@ -24,6 +27,7 @@ class Game {
       this.current_round = this.findCurrentRound();
 
       console.log(this.current_round);
+      lastGamesWinner.value = null;
    }
 
    buildGameTree() {
@@ -65,7 +69,7 @@ class Game {
       return picked_songs[0];
    }
 
-   setWinner(winner_id: any) {
+   async setWinner(winner_id: any) {
       const winner =
          this.current_round.left.id === winner_id
             ? this.current_round.left
@@ -76,8 +80,13 @@ class Game {
       winner.parent = winner.parent.parent;
 
       if (this.game_tree.left.name && this.game_tree.right.name) {
-         alert("Winner: " + winner.name);
-         console.log("WINNERXXX", this.game_tree);
+         const confetti = useConfetti();
+
+         lastGamesWinner.value = winner.name;
+         for (let i = 0; i < 15; i++) {
+            await confetti.start();
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+         }
 
          game.value = null;
          return;
@@ -276,8 +285,8 @@ function importSongs() {
 </script>
 
 <template>
+   <h1>Song Battle</h1>
    <div class="load-playlist">
-      <h1>Load Playlist</h1>
       <label>URL: <input type="text" v-model="playlist_url" class="playlist-url-input" /></label>
       <button @click="getPlaylist">Load</button>
    </div>
@@ -296,7 +305,7 @@ function importSongs() {
       </div>
    </div>
 
-   <div class="new-game" v-if="songs.length">
+   <div class="new-game" v-if="songs.length && !game">
       <h1>New Game</h1>
       <label>
          Anzahl der Songs:
@@ -350,6 +359,8 @@ function importSongs() {
          <button @click="game.setWinner(game.current_round.left.id)">Left</button>
          <button @click="game.setWinner(game.current_round.right.id)">Right</button>
       </div>
+
+      <winner-banner :winner="lastGamesWinner" v-if="lastGamesWinner" />
    </div>
 </template>
 
@@ -392,10 +403,6 @@ function importSongs() {
       width: 100%;
       aspect-ratio: 1;
    }
-}
-
-.tree {
-   width: 500px;
 }
 
 .current-round {
