@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 const hidden = ref(false);
 import WinSound from "/win.mp3";
 
